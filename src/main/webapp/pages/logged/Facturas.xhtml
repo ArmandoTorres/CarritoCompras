@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html >
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <ui:composition template="/WEB-INF/template/menuTemplate.xhtml">
+
+        <ui:define name="titulo">
+            <h:outputText value="Historial de Compras."/>
+        </ui:define>
+        
+        <ui:define name="centro">
+            <h:form>
+                <p:panel id="panel1" header="Listado de facturas">
+                    <p:dataTable var="fac" value="#{facturasMB.listaFactura}"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {PageLinks}"
+                                 emptyMessage="No existen facturas para mostrar"
+                                 rowSelectMode="single"
+                                 style="text-align: center;"
+                                 id="tbl">
+
+                        <p:column headerText="Fecha" style="width: 100px;">
+                            <h:outputText value="#{fac.fecha}">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </h:outputText>    
+                        </p:column>
+
+                        <p:column headerText="Articulos" style="width: 100px;">
+                            <h:outputText value ="#{fac.detalleFactura.size()}"/>
+                        </p:column>
+
+                        <p:column headerText="Total" style="width: 150px;">
+                            <h:outputText value="#{fac.total}">
+                                <f:convertNumber type="currency" currencySymbol="RD$ "/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Direccion Envio">
+                            <h:outputText value="#{fac.direccion}"/>
+                        </p:column>
+
+                        <p:column headerText="Ver" style="width: 100px;">
+                            <p:commandButton action="/pages/logged/Factura" icon="ui-icon-search">
+                                <f:param name="SelectedFactura" value="#{fac.id}"/>
+                            </p:commandButton>
+                        </p:column>
+                        
+                    </p:dataTable>
+                </p:panel>
+            </h:form>    
+        </ui:define>
+    </ui:composition>
+</html>

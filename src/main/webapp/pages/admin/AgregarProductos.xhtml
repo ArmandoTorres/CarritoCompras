@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+    <ui:composition template="/WEB-INF/template/menuTemplate.xhtml">
+        <ui:define name="titulo">
+            <h:outputText value="Agregar producto"/>
+        </ui:define>
+        <ui:define name="centro">
+            <p:panel header="Agregar Productos">
+                <h:form enctype="multipart/form-data">
+                    <p:messages closable="true" showDetail="true" autoUpdate="true"/>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel for="titulo" value="Titulo:"/>
+                            <p:inputText id="titulo" value="#{agregarProductoMB.producto.titulo}"
+                                         required="true"
+                                         pt:autofocus="true"
+                                         requiredMessage="Debe indicar el titulo."
+                                         validatorMessage="EL titulo debe contener minimo 4 caracteres y maximo 50."
+                                         maxlength="50"
+                                         size="58">
+                                <f:validateLength minimum="4" maximum="50"/>
+                            </p:inputText>
+                            
+                            <p:outputLabel for="cantidad" value="Cantidad:"/>
+                            <p:spinner min="1" id="cantidad" value="#{agregarProductoMB.producto.cantidad}"
+                                       required="true" requiredMessage="Debe indicar la cantidad del producto.">
+                            </p:spinner>
+                            
+                            <p:outputLabel for="precio" value="Precio: "/>
+                            <p:inputText id="precio" value="#{agregarProductoMB.producto.precio}"
+                                         required="true"
+                                         requiredMessage="Debe indicar el precio."
+                                         converterMessage="Solo se aceptan numeros naturales entre 0 y 99,999.">
+                                <f:validateDoubleRange minimum="0.00" maximum="99999.00"/>
+                            </p:inputText>
+                            
+                            <p:outputLabel value="Descripcion:"/>
+                            <p:inputTextarea rows="5" cols="60" counter="display" maxlength="2000"
+                                             counterTemplate="{0} caracteres faltantes" autoResize="false"
+                                             value="#{agregarProductoMB.producto.descripcion}"/>
+                            
+                            <h:outputText value=""/>
+                            <h:outputText id="display"/>
+                            
+                            <p:outputLabel value="Foto:"/>
+                            <p:fileUpload value="#{agregarProductoMB.file}" mode="simple"/>
+                            
+                            <p:commandButton actionListener="#{agregarProductoMB.guardar}" 
+                                             value="Guardar" ajax="false" icon="ui-icon-disk" />
+
+                        </h:panelGrid>
+                </h:form>
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+</html>

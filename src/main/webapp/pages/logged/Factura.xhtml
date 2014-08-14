@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html >
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <ui:composition template="/WEB-INF/template/menuTemplate.xhtml">
+        <ui:define name="titulo">
+            <h:outputText value="Factura"/>
+        </ui:define>
+        
+        <ui:define name="centro">
+            <!-- Panel central que contiene todos los elementos -->
+            <p:panel header="Factura">
+                <div style="padding: 20px;box-shadow: 0px 0px 10px #aaa; border-radius: 20px;margin-top: 10px;">
+                    <h:panelGrid columns="2" cellspacing="5px;" cellpadding="5px;">
+                        <p:outputLabel value="Factura No. " style="font-weight: bold; "/>
+                        <p:outputLabel value="#{facturaMB.factura.id}" />
+
+                        <p:outputLabel value="Fecha Emision: " style="font-weight: bold;"/>
+                        <p:outputLabel value="#{facturaMB.factura.fecha}">
+                            <f:convertDateTime pattern="dd-MM-yyyy"/> 
+                        </p:outputLabel>
+                        <h:outputText value="Direccion envio:" style="font-weight: bold;"/>
+                        <h:outputText value="#{facturaMB.factura.direccion}."/>
+                    </h:panelGrid>
+                    
+                    <p:dataTable value="#{facturaMB.factura.detalleFactura}" var="det"
+                                 emptyMessage="No se encontraron productos para mostrar."
+                                 style="margin-top:10px;">
+                        <f:facet name="header">
+                            <p:outputLabel value="Detalle de factura"/>
+                        </f:facet>
+                        <p:column headerText="No." width="100px;" style="text-align: center;">
+                            <p:outputLabel value="#{det.id}" />
+                        </p:column>
+                        <p:column headerText="Titulo" width="250px;" style="text-align: center;">
+                            <p:outputLabel value="#{det.producto.titulo}"/>
+                        </p:column>
+                        <p:column headerText="Cantidad" width="100px;" style="text-align: center;">
+                            <p:outputLabel value="#{det.cantidad}"/>
+                        </p:column>
+                        <p:column headerText="Precio" style="text-align: right;">
+                            <p:outputLabel value="#{det.precio}">
+                                <f:convertNumber type="currency" currencySymbol="RD$ "/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Total" style="text-align: right;" footerText="Total: RD$ #{facturaMB.factura.total}">
+                            <p:outputLabel value="#{det.total}">
+                                <f:convertNumber type="currency" currencySymbol="RD$ "/>
+                            </p:outputLabel>
+                        </p:column>
+                    </p:dataTable>
+                    
+                </div>    
+            </p:panel>
+        </ui:define>
+        
+    </ui:composition>
+</html>

@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <ui:composition template="/WEB-INF/template/menuTemplate.xhtml">
+        <ui:define name="titulo">
+            <p:outputLabel value="Direcciones Envio"/>
+        </ui:define>
+        
+        <ui:define name="centro">
+            <p:panel header="Direcciones Envio">
+                <h:form id="fomularioDireccion">
+                    <p:growl autoUpdate="true" showDetail="true" showSummary="true" sticky="true"/>
+                    <div style="width: 100%; display: inline-flex;">
+                        <c:forEach var="dir" items="#{dirMB.listaDireccion}">
+                            <div style="box-shadow: 0px 0px 10px #aaa;width: 50%; margin-right: 15px; padding: 10px;">
+                                <h:panelGrid columns="2" cellpadding="5">
+                                    <p:outputLabel value="Pais:" style="font-weight: bold;"/>
+                                    <h:outputText value="#{dir.pais}"/>
+                                    
+                                    <p:outputLabel value="Contacto:" style="font-weight: bold;"/>
+                                    <h:outputText value="#{dir.nombreContacto}"/>
+                                    
+                                    <p:outputLabel  value="Calle 1:" style="font-weight: bold;"/>
+                                    <h:outputText  value="#{dir.calle1}"/>
+                                    
+                                    <p:outputLabel  value="Calle 2:" style="font-weight: bold;"/>
+                                    <h:outputText  value="#{dir.calle2}"/>
+                        
+                                    <p:outputLabel  value="Ciudad:" style="font-weight: bold;"/>
+                                    <h:outputText  value="#{dir.ciudad}"/>
+
+                                    <p:outputLabel  value="ZipCode: " style="font-weight: bold;"/>
+                                    <h:outputText  value="#{dir.zipCode}"/>
+                                    
+                                    <p:outputLabel  value="Telefono: " style="font-weight: bold;"/>
+                                    <h:outputText  value="#{dir.telefono}" converter="com.carritocompras.util.PhoneConverter"/>
+                                    
+                                    <p:outputLabel value="Principal: " style="font-weight: bold;"/>
+                                    <h:outputText  value="#{dir.principal ? 'SI' : 'NO'}"/>
+                                </h:panelGrid>
+                                <div style="width:100%; text-align: right;">
+                                    <p:commandLink value="Volver Principal" 
+                                                   style="color:#46b8da; padding-right: 10px;" 
+                                                   rendered="#{not dir.principal}" 
+                                                   update=":fomularioDireccion"
+                                                   actionListener="#{dirMB.makeDefault}">
+                                        <f:attribute name="selected" value="#{dir}"/>
+                                    </p:commandLink>
+                                    <p:commandLink value="Eliminar" 
+                                                   style="color: #46b8da;padding-right: 10px;" 
+                                                   rendered="#{not dir.principal}" 
+                                                   update=":fomularioDireccion"
+                                                   actionListener="#{dirMB.eliminarDireccion}">
+                                        <f:attribute name="selected" value="#{dir}"/>
+                                        <p:confirm header="Confirmacion" message="¿Esta seguro de que desea eliminar esta direccion?" icon="ui-icon-alert"/>
+                                    </p:commandLink>    
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>    
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                    </p:confirmDialog>
+                </h:form>
+                <p:separator style="padding-top: 10px;"/>
+                <div style="width: 100%;text-align: center;">
+                    <p:link outcome="/pages/logged/AgregarDireccionEnvio?faces-redirect=true" value="Agregar Direccion"/>
+                </div>
+            </p:panel>    
+        </ui:define>
+    </ui:composition>
+</html>

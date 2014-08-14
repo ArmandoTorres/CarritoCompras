@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/WEB-INF/template/menuTemplate.xhtml">
+        <ui:define name="titulo">
+            <h:outputText value="Productos"/>
+        </ui:define>
+        <ui:define name="centro">
+            <p:panel header="Productos">
+                <h:form id="formulario">
+                    <p:growl id="mensaje" showDetail="true" showSummary="true" sticky="true"/>
+                    <p:dataTable id="tbl" emptyMessage="No existen productos para mostrar."
+                                 pageLinks="10" paginatorTemplate="{CurrentPageReport} {PageLinks}"
+                                 paginator="true" style="text-align: center;"
+                                 value="#{productosMB.listaProductos}" var="pro">
+                        
+                        <p:column headerText="Titulo" style="width: 200px;">
+                            <h:outputText value="#{pro.titulo}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Descripcion" style="width: 300px;">
+                            <h:outputText value="#{fn:length(pro.descripcion) > 30 ? fn:substring(pro.descripcion,0,30).concat('...') : pro.descripcion}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Precio" style="width: 150px;">
+                            <h:outputText value="#{pro.precio}">
+                                <f:convertNumber type="currency" currencySymbol="RD$ "/>
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column headerText="Cantidad" style="width: 70px;">
+                            <h:outputText value="#{pro.cantidad}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Incrementar">
+                            <p:commandButton action="#{productosMB.agregar(pro)}"
+                                             update=":formulario"
+                                             icon="ui-icon-plus" style="width: 50px;"/>
+                        </p:column>
+                        
+                        <p:column headerText="Agregar Foto">
+                            <p:commandButton action="/pages/admin/AgregarImagenesProducto"
+                                             icon="ui-icon-plus"
+                                             style="width: 50px;">
+                                <f:param value="#{pro.id}" name="SelectedProducto"/>
+                                <f:param value="true" name="faces-redirect=true"/>
+                            </p:commandButton>    
+                        </p:column>
+                        
+                    </p:dataTable>
+                </h:form>
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+</html>

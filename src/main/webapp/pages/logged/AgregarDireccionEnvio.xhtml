@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:composition template="/WEB-INF/template/menuTemplate.xhtml">
+        <ui:define name="titulo">
+            <p:outputLabel value="Agregar Direccion Envio"/>
+        </ui:define>
+
+        <ui:define name="centro">
+            <p:panel header="Agregar direccion de envio">
+                <h:form>
+                    <p:messages closable="true" showDetail="true" showSummary="true" autoUpdate="true"/>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="Pais: "/>
+                        <p:selectOneMenu value="#{agregarUsuariosMB.pais}">
+                            <c:forEach var="pais" items="#{agregarUsuariosMB.listaPaises}">
+                                <f:selectItem itemLabel="#{pais.nombre}" itemValue="#{pais.id}"/>
+                            </c:forEach>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Contacto: " for="contacto"/>
+                        <p:inputText id="contacto" value="#{agregarUsuariosMB.direccion.nombreContacto}"
+                                     required="true"
+                                     requiredMessage="Debe indicar el nombre de contacto."
+                                     validatorMessage="El nombre debe conterner mas de 5 caracteres.">
+                            <f:validateLength minimum="5"/>
+                        </p:inputText>
+
+                        <p:outputLabel value="Calle1: " for="calle1"/>
+                        <p:inputText id="calle1" value="#{agregarUsuariosMB.direccion.calle1}"
+                                     required="true"
+                                     requiredMessage="Debe indicar el nombre de la calle."/>
+
+                        <p:outputLabel value="Calle2: " for="calle2"/>
+                        <p:inputText id="calle2" value="#{agregarUsuariosMB.direccion.calle2}"/>                                    
+
+                        <p:outputLabel value="Ciudad: " for="ciudad"/>
+                        <p:inputText id="ciudad" value="#{agregarUsuariosMB.direccion.ciudad}"
+                                     required="true" requiredMessage="Debe indicar el nombre de la ciudad."/>
+
+                        <p:outputLabel value="Zip Code: " for="zipcode"/>
+                        <p:inputText id="zipcode" value="#{agregarUsuariosMB.direccion.zipCode}"
+                                     required="true" requiredMessage="Debe indicar el zip code."
+                                     converterMessage="Solo se aceptan numeros en el zip code.">
+                            <f:convertNumber/>
+                        </p:inputText>
+
+                        <p:outputLabel value="Telefono: " for="telefono"/>
+                        <p:inputMask id="telefono" value="#{agregarUsuariosMB.direccion.telefono}"
+                                     mask="(999) 999-9999"/>
+
+                        <h:commandButton value="Guardar" 
+                                         action="#{agregarUsuariosMB.agregarDireccion()}"/>                                
+                    </h:panelGrid>
+                </h:form>
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+</html>

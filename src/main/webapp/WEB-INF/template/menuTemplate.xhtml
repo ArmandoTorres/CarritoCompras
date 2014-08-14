@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:head>
+        <ui:insert name="titulo">
+            <h:outputText value="Menu Principal"></h:outputText>
+        </ui:insert> 
+    </h:head>
+    
+    <h:body>
+        <p:layout fullPage="true">
+                <!-- Parte vertical izquierda de la pagina -->
+                <p:layoutUnit position="west" size="250">
+                    <h:form>
+                        <p:menu>
+                            <p:submenu label="Opciones">
+                                <c:if test="#{empty sessionScope['CurrentUser']}">
+                                    <p:menuitem value="Ingresar" icon="ui-icon-person" action="/pages/public/Login?faces-redirect=true"/>
+                                </c:if>
+                                <p:menuitem value="Home" icon="ui-icon-home" action="/index?faces-redirect=true"/>
+                                <c:if test="#{not empty sessionScope['CurrentUser']}">
+                                    <p:menuitem value="Carrito #{sessionScope['CarritoItems']}" 
+                                                icon="ui-icon-cart" action="/pages/logged/Carrito?faces-redirect=true"/>
+                                    <p:menuitem value="Historial Compras" icon="ui-icon-calendar" 
+                                                action="/pages/logged/Facturas?faces-redirect=true"/>
+                                    <p:menuitem value="Direcciones Envio" icon="ui-icon-transferthick-e-w" 
+                                                action="/pages/logged/DireccionesEnvio?faces-redirect=true"/>
+                                    <p:menuitem value="Salir - #{sessionScope['CurrentUser']}" icon="ui-icon-close" action="#{loginMB.logout()}"/>
+                                    <c:if test="#{sessionScope['CurrentUserRole'] eq 'ADMIN'}">
+                                        <p:submenu label="Administrador">
+                                            <p:menuitem value="Usuarios" icon="ui-icon-person"
+                                                        action="/pages/admin/Usuarios?faces-redirect=true"/>
+                                            <p:menuitem value="Agregar Usuarios" icon="ui-icon-person"
+                                                        action="/pages/admin/AgregarUsuarios?faces-redirect=true"/>
+                                            <p:menuitem value="Productos" icon="ui-icon-tag"
+                                                        action="/pages/admin/Productos?faces-redirect=true"/>
+                                            <p:menuitem value="Agregar Productos" icon="ui-icon-tag"
+                                                        action="/pages/admin/AgregarProductos?faces-redirect=true"/>
+                                        </p:submenu>
+                                    </c:if>    
+                                </c:if>  
+                            </p:submenu>
+                        </p:menu>
+                    </h:form>
+                </p:layoutUnit>
+
+                <!-- centro de la pagina -->
+                <p:layoutUnit position="center">
+                    <ui:insert name="centro">
+                        <h:outputText value="Centro de la pagina"/>
+                    </ui:insert>
+                </p:layoutUnit>    
+                
+            </p:layout>
+    </h:body>        
+</html>

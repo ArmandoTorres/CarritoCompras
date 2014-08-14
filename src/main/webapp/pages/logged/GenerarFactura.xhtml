@@ -1,0 +1,132 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/WEB-INF/template/menuTemplate.xhtml">
+        <ui:define name="centro">
+            <!-- Formulario Wizard para la compra de productos -->
+            <h:form id="formulario" rendered="#{generarFacturaMB.listaCarrito ne null}">
+                <p:growl id="mensajes" sticky="true" showDetail="true" showSummary="true"/>
+                <p:wizard>
+                    <!-- Tab 1 Seleccionar Cantidad -->
+                    <p:tab id="cantidadProductos" title="Cantidad">
+                        <p:panel header="Seleccione la cantidad deseada">
+                            <h:panelGrid columns="2" width="100%">
+                                <ui:repeat value="#{generarFacturaMB.listaCarrito}" var="car">
+                                    <div style="border-top: 1px solid #D5D2CA;">
+                                        <h:panelGrid columns="2">
+                                            <p:graphicImage name="#{generarFacturaMB.getOneFoto(car.producto)}" width="150px" alt="#{car.producto.titulo}"/>
+                                            <h:panelGrid columns="2">
+                                                
+                                                <h:outputText value="Titulo: "/>
+                                                <h:outputText value="#{car.producto.titulo} #{car.producto.cantidad}" style="color: blue"/>
+                                                
+                                                <h:outputText value="Cantidad:"/>
+                                                <p:selectOneMenu value="#{car.producto.cantidad}">
+                                                    <f:selectItems value="#{generarFacturaMB.getAllQuantities(car.producto.id)}"/>
+                                                </p:selectOneMenu>
+                                                
+                                                <h:outputText value="Precio: "/>
+                                                <h:outputText value="RD$ #{car.producto.precio}" style="font-size: 14px;">
+                                                    <f:convertNumber type="currency" currencySymbol="RD$ "/>
+                                                </h:outputText>
+                                                
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                    </div>
+                                </ui:repeat>    
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:tab>
+                    <!-- End Tab 1 -->
+                    
+                    <!-- Tab 2 Seleccionar Direccion envio -->
+                    <p:tab id="confirmarEnvio" title="Direccion Envio">
+                        <p:panel header="Confirmar direccion de envio">
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Direccion:"/>
+                                <p:selectOneMenu value="#{generarFacturaMB.direccion}" onchange="submit()" 
+                                                 valueChangeListener="#{generarFacturaMB.setCurretDireccion(e)}">
+                                    <f:selectItems value="#{generarFacturaMB.direcciones}" />
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                            <p:panel>
+                                <h:panelGrid columns="2" style="text-align: justify">
+                                    <h:panelGrid columns="2" style="padding-left: 10px; padding-right: 100px; border-right: 1px solid #D5D2CA;">
+                                        <p:outputLabel value="Nombre Contacto:"/>
+                                        <p:outputLabel value="#{generarFacturaMB.dir.nombreContacto}"/>
+
+                                        <p:outputLabel value="Pais:"/>
+                                        <p:outputLabel value="#{generarFacturaMB.dir.pais}"/>
+
+                                        <p:outputLabel value="Ciudad:"/>
+                                        <p:outputLabel value="#{generarFacturaMB.dir.ciudad}"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2" style="padding-left: 10px;">
+                                        <p:outputLabel value="Calle 1:"/>
+                                        <p:outputLabel value="#{generarFacturaMB.dir.calle1}"/>
+
+                                        <p:outputLabel value="Calle 2:"/>
+                                        <p:outputLabel value="#{generarFacturaMB.dir.calle2}"/>
+
+                                        <p:outputLabel value="Telefono:"/>
+                                        <h:outputText value="#{generarFacturaMB.dir.telefono}"
+                                                      converter="com.carritocompras.util.PhoneConverter"/>  
+                                    </h:panelGrid>
+                                </h:panelGrid>    
+                           </p:panel>
+                        </p:panel>
+                    </p:tab>
+                    <!-- End Tab 2 -->
+                    
+                    <!-- Tab 3 Confirmar Compra-->
+                    <p:tab id="confirmar" title="Confirmar">
+                        <p:panel header="Confirmar y realizar la compra">
+                            <h:panelGrid columns="2" width="100%">
+                                <ui:repeat value="#{generarFacturaMB.listaCarrito}" var="car">
+                                    <div style="border-top: 1px solid #D5D2CA">
+                                        <h:panelGrid columns="2">
+                                            <p:graphicImage name="#{generarFacturaMB.getOneFoto(car.producto)}" width="150px" alt="#{car.producto.titulo}"/>
+                                            <h:panelGrid columns="2">
+                                                <h:outputText value="Titulo: "/>
+                                                <h:outputText value="#{car.producto.titulo}" style="color: blue"/>
+                                                <h:outputText value="Cantidad: "/>
+                                                <h:outputText value="#{car.producto.cantidad}" style="font-size: 14px;"/>
+                                                <h:outputText value="Precio unitario: "/>
+                                                <h:outputText value="RD$ #{car.producto.precio}" style="font-size: 14px;">
+                                                    <f:convertNumber type="currency" currencySymbol="RD$ "/>
+                                                </h:outputText>
+                                                <h:outputText value="Total: "/>
+                                                <h:outputText value="RD$ #{car.producto.precio * car.producto.cantidad}" style="font-size: 14px;">
+                                                    <f:convertNumber type="currency" currencySymbol="RD$ "/>
+                                                </h:outputText>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                    </div>
+                                </ui:repeat>    
+                            </h:panelGrid>
+                            <div style="width: 100%; text-align: right;">
+                                <p:commandButton action="#{generarFacturaMB.confirmarCompra()}" value="Confirmar compra" update=":formulario">
+                                    <p:confirm header="Confirmacion" message="¿Esta seguro de que desea realizar la compra de los productos seleccionados?" icon="ui-icon-alert"/>
+                                </p:commandButton>
+                            </div>
+                        </p:panel>
+                    </p:tab>
+                    <!-- End Tab 3 -->
+                </p:wizard>
+                <!-- Dialogo de confirmacion de compra-->
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+                <!-- fin dialogo confirmacion -->
+            </h:form>
+            
+        </ui:define>
+    </ui:composition>
+
+</html>

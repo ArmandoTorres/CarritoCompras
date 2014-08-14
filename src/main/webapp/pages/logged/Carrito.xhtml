@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <ui:composition template="/WEB-INF/template/menuTemplate.xhtml">
+        <ui:define name="centro">
+            <p:panel header="Carrito de Compras">
+                <!-- Se muestra cuando el carrito esta vacio. -->
+                <p:graphicImage name="images/empty-cart.gif" rendered="#{not carritoMB.isCarritoItem()}"/>
+                
+                <h:form id="formulario" rendered="#{carritoMB.isCarritoItem()}">
+                    <p:growl id="mensaje" showDetail="true" showSummary="true" sticky="true" autoUpdate="true"/>
+                    <ui:repeat value="#{carritoMB.listaCarrito}" var="car">
+                        <div style="border-top: 1px solid #D5D2CA">
+                            <h:panelGrid columns="2">
+                                
+                                <p:graphicImage url="#{carritoMB.getOneFoto(car.producto)}" width="150px" alt="#{car.producto.titulo}"/>
+                                
+                                <h:panelGrid columns="1">
+                                    
+                                    <p:commandLink action="/pages/public/DetalleProducto" value="#{car.producto.titulo}" style="color: blue">
+                                        <f:param name="selectedProduct" value="#{car.producto.id}"/>
+                                    </p:commandLink>
+                                    
+                                    <h:outputText value=""/>
+                                    
+                                    <h:outputText value="#{car.producto.precio}" style="font-size: 14px;">
+                                        <f:convertNumber type="currency" currencySymbol="RD$ "/>
+                                    </h:outputText>
+                                    
+                                    <p:commandLink actionListener="#{carritoMB.borrarDelCarrito}" value="Borrar del carrito" style="font-size: 12px; color: blue" update=":formulario">
+                                        <p:confirm header="Confirmacion" message="¿Esta seguro de que desea eliminar este producto de su carrito?" icon="ui-icon-alert"/>
+                                        <f:attribute name="selected" value="#{car}"/>
+                                    </p:commandLink>
+                                    
+                                </h:panelGrid>
+                                
+                            </h:panelGrid> 
+                        </div>
+                    </ui:repeat>
+                    
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                    </p:confirmDialog>
+                    
+                </h:form>    
+                <f:facet name="footer" rendered="#{carritoMB.isCarritoItem()}">
+                    <div style="float: right">
+                        Total Carrito : <h:outputText value="#{carritoMB.totalCarrito}" >
+                                            <f:convertNumber currencySymbol="RD$ " type="currency"/>
+                                        </h:outputText>
+                    </div>
+                    <h:form>
+                        <h:commandButton value="Comprar" action="/pages/logged/GenerarFactura" rendered="#{carritoMB.isCarritoItem()}"/>
+                    </h:form>
+                </f:facet>
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+</html>

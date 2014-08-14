@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <ui:composition template="/WEB-INF/template/menuTemplate.xhtml">
+        <ui:define name="titulo">
+            <h:outputText value="Agregar Imagenes"/>
+        </ui:define>
+        <ui:define name="centro">
+            <h:form id="formulario">
+                <p:panel header="Agregar imagenes">
+                    <p:separator/>
+                    <h:panelGrid columns="1" style="padding-left: 5px;">
+                        <p:growl autoUpdate="true" showDetail="true" showSummary="true" sticky="true"/>
+                        <p:outputLabel value="Titulo: " style="font-weight: bold"/>
+                        <p:outputLabel value="#{addImage.producto.titulo}" style="padding-left: 15px;"/>
+
+                        <p:outputLabel value="Descripcion: " style="font-weight: bold"/>
+                        <p:outputLabel value="#{addImage.producto.descripcion}" style="padding-left: 15px;"/>
+                    </h:panelGrid>
+                    <p:separator/>
+                    <!-- limit 1MB -->
+                    <p:fileUpload fileUploadListener="#{addImage.handleFileUpload}"
+                                  mode="advanced" dragDropSupport="false"
+                                  multiple="true" update=":formulario"
+                                  sizeLimit="1000000" 
+                                  auto="true"
+                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                </p:panel>
+             </h:form>   
+        </ui:define>
+    </ui:composition>
+</html>
